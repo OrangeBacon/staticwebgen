@@ -5,4 +5,6 @@ def version():
 
 def generate(*args, **kwargs):
     config = configure(*args, **kwargs)
+    if config is None:
+        return
     print(config)
