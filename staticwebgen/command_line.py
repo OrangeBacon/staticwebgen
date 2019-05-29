@@ -1,6 +1,6 @@
 import sys
-import staticwebgen
+from staticwebgen import generate
 
-def main():
-    staticwebgen.printname()
-    print(sys.argv)
+def main(*args, **kwargs):
+    arguments = [*args, *sys.argv]
+    generate(*arguments, **kwargs)

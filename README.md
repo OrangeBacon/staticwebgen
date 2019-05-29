@@ -9,5 +9,5 @@ pip install staticwebgen
 
 # Usage
 ```
-staticwebgen
+staticwebgen [-h] [--config CONFIG] [--version] directory
 ```
