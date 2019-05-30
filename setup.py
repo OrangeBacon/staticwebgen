@@ -18,6 +18,9 @@ setuptools.setup(
     entry_points = {
         'console_scripts': ["staticwebgen = staticwebgen.command_line:main"]
     },
+    install_requires = [
+        "watchdog"
+    ],
 
     classifiers = [
         "Development Status :: 2 - Pre-Alpha",

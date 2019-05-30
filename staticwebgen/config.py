@@ -10,12 +10,18 @@ def default_config():
         "general": {
             "sourceDir": (Path, Path(".")),
             "configFile": (Path, Path("config.ini")),
-            "buildDir": (Path, Path("build"))
+            "buildDir": (Path, Path("build")),
+            "mode": (Mode, "build")
         },
         "sections": {
             "default": (Path, Path("./layout"))
         }
     }
+
+def Mode(string):
+    if not(string == "build" or string == "watch"):
+        raise ValueError(f"{string} is not a valid mode")
+    return string
 
 def configure(*args, **kwargs):
     parser = argparse.ArgumentParser(description="Generate a static website", prog=Path(args[0]).name)
@@ -24,6 +30,8 @@ def configure(*args, **kwargs):
         help="where is the static site located (default = .)")
     parser.add_argument("--config", "-c", default="config.ini", dest="configFile",
         help="file name of the configuration within the site directory (default = 'config.ini')")
+    parser.add_argument("--mode", "-m", default="build",
+        help="Runtime mode ('watch' or 'build'")
     parser.add_argument("--version", "-v",
         action="version", version=f"Staticwebgen {staticwebgen.version()}")
     
