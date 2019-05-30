@@ -5,27 +5,39 @@ from pathlib import Path
 
 import staticwebgen
 
+def default_config():
+    return {
+        "general": {
+            "sourceDir": (Path, Path(".")),
+            "configFile": (Path, Path("config.ini")),
+            "buildDir": (Path, Path("build"))
+        },
+        "sections": {
+            "default": (Path, Path("./layout"))
+        }
+    }
+
 def configure(*args, **kwargs):
     parser = argparse.ArgumentParser(description="Generate a static website", prog=Path(args[0]).name)
 
-    parser.add_argument("directory", nargs="?", default=".",
+    parser.add_argument("sourceDir", nargs="?", default=".",
         help="where is the static site located (default = .)")
-    parser.add_argument("--config", "-c", default="config.ini",
+    parser.add_argument("--config", "-c", default="config.ini", dest="configFile",
         help="file name of the configuration within the site directory (default = 'config.ini')")
-    parser.add_argument("--version", "-v", 
+    parser.add_argument("--version", "-v",
         action="version", version=f"Staticwebgen {staticwebgen.version()}")
     
     cmd_args = parser.parse_args(args[1:])
 
-    if not is_directory(cmd_args.directory):
+    if not is_directory(cmd_args.sourceDir):
         return None
-    if not is_file(Path(cmd_args.directory)/Path(cmd_args.config)):
+    if not is_file(Path(cmd_args.sourceDir)/Path(cmd_args.configFile)):
         return None
     
     parser = configparser.ConfigParser(strict=True, delimiters=("="), comment_prefixes=("#"))
     parser.BOOLEAN_STATES = {"True": True, "true": True, "False": False, "false": False}
     try:
-        parser.read(Path(cmd_args.directory)/Path(cmd_args.config))
+        parser.read(Path(cmd_args.sourceDir)/Path(cmd_args.configFile))
     except configparser.Error as e:
         print(e.message, file=sys.stderr)
         return None
@@ -33,16 +45,7 @@ def configure(*args, **kwargs):
     config = {s:dict(parser.items(s)) for s in parser.sections()}
     config.pop("DEFAULT", None)
 
-    return {**config, **vars(cmd_args), **kwargs}
-
-def default_config():
-    return {
-        "directory": (Path, Path(".")),
-        "config": (Path, Path("config.ini")),
-        "sections": {
-            "default": (Path, Path("./layout"))
-        }
-    }
+    return {**config, "general": vars(cmd_args), **kwargs}
 
 def format_config(config):
     if config is None:
