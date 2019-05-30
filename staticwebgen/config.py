@@ -8,10 +8,12 @@ import staticwebgen
 def configure(*args, **kwargs):
     parser = argparse.ArgumentParser(description="Generate a static website", prog=Path(args[0]).name)
 
-    parser.add_argument('directory', default=".")
-    parser.add_argument('--config', '-c', default="config.ini")
-    parser.add_argument('--version', '-v', 
-        action='version', version=f'Staticwebgen {staticwebgen.version()}')
+    parser.add_argument("directory", nargs="?", default=".",
+        help="where is the static site located (default = .)")
+    parser.add_argument("--config", "-c", default="config.ini",
+        help="file name of the configuration within the site directory (default = 'config.ini')")
+    parser.add_argument("--version", "-v", 
+        action="version", version=f"Staticwebgen {staticwebgen.version()}")
     
     cmd_args = parser.parse_args(args[1:])
 
@@ -93,11 +95,11 @@ def is_directory(path):
         path = Path(path)
 
     if not path.exists():
-        print(f"Error: path {path} provided does not exist", file=sys.stderr)
+        print(f"Error: path {path} does not exist", file=sys.stderr)
         return False
 
     if not path.is_dir():
-        print(f"Error: path {path} provided is not a directory", file=sys.stderr)
+        print(f"Error: path {path} is not a directory", file=sys.stderr)
         return False
 
     return True
@@ -107,11 +109,11 @@ def is_file(path):
         path = Path(path)
 
     if not path.exists():
-        print(f"Error: path {path} provided does not exist", file=sys.stderr)
+        print(f"Error: path {path} does not exist", file=sys.stderr)
         return False
 
     if not path.is_file():
-        print(f"Error: path {path} provided is not a directory", file=sys.stderr)
+        print(f"Error: path {path} is not a directory", file=sys.stderr)
         return False
 
     return True

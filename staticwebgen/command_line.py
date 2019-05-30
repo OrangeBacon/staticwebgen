@@ -1,6 +1,6 @@
 import sys
-from staticwebgen import generate
+from staticwebgen import run
 
 def main(*args, **kwargs):
     arguments = [*sys.argv, *args]
-    generate(*arguments, **kwargs)
+    run(*arguments, **kwargs)

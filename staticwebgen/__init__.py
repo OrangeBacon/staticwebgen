@@ -1,13 +1,15 @@
 from staticwebgen.config import configure, format_config
+from staticwebgen.generate import generate
 
 def version():
     return "0.0.3"
 
-def generate(*args, **kwargs):
+def run(*args, **kwargs):
     config = format_config(configure(*args, **kwargs))
     if config is None:
         return
-    print(config)
+
+    generate(config)
 
 if __name__ == "__main__":
     import staticwebgen.command_line
